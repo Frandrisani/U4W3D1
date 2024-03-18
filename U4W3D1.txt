@@ -1,0 +1,60 @@
+ES.1 - Estrai tutti i clienti con nome Mario
+
+SELECT * FROM public."Clienti"
+WHERE "Nome"='Mario'
+ORDER BY "NumeroCliente" ASC 
+-------------------
+
+ES.2 - Estrarre il nome e il cognome dei clienti nati nel 1982
+
+SELECT "Nome", "Cognome" FROM public."Clienti"
+WHERE "AnnoDiNascita"=1982
+ORDER BY "NumeroCliente" ASC 
+-------------------
+
+Es.3 - Estrarre il numero delle fatture con iva al 20%
+
+SELECT "NumeroFattura" FROM public."Fatture"
+WHERE "Iva"=20
+ORDER BY "NumeroFattura" ASC 
+-------------------
+
+ES.4 - Estrarre i prodotti attivati nel 2017 e che sono in produzione oppure in commercio (Per estrarre l’anno da una data si può usare EXTRACT(YEAR FROM data)
+
+SELECT * FROM public."Prodotti"
+WHERE EXTRACT(YEAR FROM "DataAttivazione")=2017 AND "InProduzione"=TRUE OR "InCommercio"=TRUE
+ORDER BY "idProdotto" ASC 
+-------------------
+
+ES.5 - Estrarre le fatture con importo inferiore a 1000 e i dati dei clienti ad esse collegate
+
+SELECT *
+FROM "Fatture" f
+JOIN "Clienti" c ON f."idCliente" = c."NumeroCliente"
+WHERE f."Importo" < 1000;
+------------------
+
+ES. 6 - Riportare l’elenco delle fatture (numero, importo, iva e data) con in aggiunta il nome del fornitore
+
+SELECT *
+FROM "Fatture" f
+JOIN "Fornitori" v ON f."NumeroFornitore" = v."NumeroFornitore"
+ORDER BY "NumeroFattura" ASC 
+
+------------------
+
+ES.7 - Considerando soltanto le fatture con iva al 20 per cento, estrarre il numero di fatture per ogni anno (Per estrarre l’anno da una data si può usare EXTRACT(YEAR FROM data)
+
+SELECT EXTRACT(YEAR FROM "DataFattura") AS "Anno", COUNT(*) AS "NumeroFatture"
+FROM "Fatture"
+WHERE "Iva" = 20
+GROUP BY EXTRACT(YEAR FROM "DataFattura")
+ORDER BY "Anno" ASC;
+---------------------
+
+ES.8 - Riportare il numero di fatture e la somma dei relativi importi divisi per anno di fatturazione
+
+SELECT EXTRACT(YEAR FROM "DataFattura") AS "Anno", COUNT (*) AS "NumeroFatture",SUM("Importo") AS "SommaImporto"
+FROM "Fatture"
+GROUP BY EXTRACT(YEAR FROM "DataFattura")
+ORDER BY "Anno" ASC;
